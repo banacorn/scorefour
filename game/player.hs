@@ -2,12 +2,45 @@ module Game.Player where
 
 import Game.Type
 import Game.Stat
+import Data.List (maximumBy)
+import Data.Ord (comparing)
 
-m = n =.= (0, 0)  =.= (0, 0)  =.= (0, 0)  =.= (0, 0) 
+-- test data
+
+m = n =.= (0, 0) =.= (0, 0) =.= (0, 0) =-= (0, 3)
+
+full = Game $ replicate 63 B ++ [Empty]
+
+testParameter = Parameter {
+    scoreFourW = 3,
+    openThreeW = 1,
+    cornerAndCoreW = 0,
+    surfaceW = 0,
+    ratioW = -1
+}
+
+--playerA = Player A parameter
+--playerB = Player B parameter
 
 
-action :: Player -> Game -> Game
-action _ game = game
+--twice = map (evaluatePair . flip expand B) $ expand n A
+--    where   evaluatePair (a, b) = evaluate a + (evaluate b) * -1
+
+--getRatio (Player _ parameters) = ratioW parameters
+
+evaluate :: Parameter -> Stat -> Double
+evaluate parameters stat = 
+    fromIntegral (scoreFour       stat) * scoreFourW       parameters +
+    fromIntegral (openThree       stat) * openThreeW       parameters +
+    fromIntegral (cornerAndCore   stat) * cornerAndCoreW   parameters +
+    fromIntegral (surface         stat) * surfaceW         parameters
+
+evaluateAction :: Parameter -> Action -> ([Position], Double)
+evaluateAction parameters (positions, game) = (positions, fitness)
+    where   fitness = evaluate parameters statA + (evaluate parameters statB) * ratio 
+            (statA, statB) = stat game
+            ratio = ratioW parameters
+
 
 replace :: [a] -> Int -> a -> [a]
 replace [] n a = []
@@ -25,18 +58,20 @@ dropChess chess position (Game slots) = Game $ dropChess' slots chess position
 game =.= position = dropChess A position game
 game =-= position = dropChess B position game
 
-expand :: Game -> Chess -> [Game]
-expand game chess = map (\ position -> dropChess chess position game ) (availableSlot game)
+expand :: Chess -> Action -> [Action]
+expand chess (actions, game) = let tree = availableSlot game in
+    case tree of
+        [] -> [(actions, game)]
+        tree -> map (\ position -> (actions ++ [position], dropChess chess position game)) tree
 
-twice = map (flip expand B) $ expand n A
-
-
+choose :: Game -> Parameter -> ([Position], Double)
+choose game parameters = maximumBy (comparing snd) $ map (evaluateAction parameters) tree
+    where   tree = expand A ([], game) >>= expand B >>= expand A >>= expand B
 
 indexToPosition :: Int -> Position
 indexToPosition n = (mod n 4, div n 4)
 
-
-availableSlot :: Game -> ActionSequence
+availableSlot :: Game -> [Position]
 availableSlot (Game slots) = toPosition 0 . drop 48 $ slots 
     where   toPosition n []= []
             toPosition n (Empty:xs) = indexToPosition n : toPosition (succ n) xs

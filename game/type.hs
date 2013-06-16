@@ -6,15 +6,23 @@ import Data.List (intersperse)
  --datatypes
 data Chess = Empty | A | B deriving (Eq)
 type Position = (Int, Int) 
-type ActionSequence = [Position]
+type Action = ([Position], Game)
 data Game = Game [Chess] deriving (Eq)
-data Player = Player deriving (Eq)
+--data Player = Player Chess Parameter deriving (Eq, Show)
 data Stat = Stat {
     scoreFour :: Int,
     openThree :: Int,
     cornerAndCore :: Int,
     surface :: Int
 } deriving (Eq)
+
+data Parameter = Parameter {
+    scoreFourW :: Double,
+    openThreeW :: Double,
+    cornerAndCoreW :: Double,
+    surfaceW :: Double,
+    ratioW :: Double
+} deriving (Eq, Show)
 
 n = Game $ replicate 64 Empty
 
@@ -28,7 +36,7 @@ instance Show Chess where
 instance Show Game where
     show (Game slots) = "\n" ++ allLine 0 ++ allLine 1 ++ allLine 2 ++ allLine 3
         where   allLine n = "| " ++ line n ++ " | " ++ line (n + 4) ++ " | " ++ line (n + 8) ++ " | " ++ line (n + 12) ++ " |\n"
-                line n = intersperse ' ' . concat . map show . drop (n * 4) . take (n * 4 + 4) $ slots
+                line n = intersperse ' ' . concat . map show . take 4 . drop (n * 4) $ slots
 
 instance Show Stat where
     show stat = "\n **** " ++ show (scoreFour stat) ++ 

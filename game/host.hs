@@ -1,20 +1,20 @@
 module Game.Host where
 
 import Game.Type
-import Game.Player (action)
+import Game.Player 
 
 
 -- instance of Game
-n = Game $ replicate 64 Empty
+--n = Game $ replicate 64 Empty
 
-runRound :: (Player, Player) -> Game -> Game
-runRound (a, b) = action b . action a
+--runRound :: (Player, Player) -> Game -> Game
+--runRound (a, b) = action b . action a
 
-runRounds _ 0 = id
-runRounds players n = runRounds players (n - 1) . runRound players 
+--runRounds _ 0 = id
+--runRounds players n = runRounds players (n - 1) . runRound players 
 
-runCompleteGame players = runRounds players 32 emptyGame
-    where   emptyGame = Game $ replicate 64 Empty
+--runCompleteGame players = runRounds players 32 emptyGame
+--    where   emptyGame = Game $ replicate 64 Empty
 
 
 
