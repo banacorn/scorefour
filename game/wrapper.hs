@@ -28,7 +28,7 @@ writeAction :: Int -> Chess -> IO ()
 writeAction serial chess = do
     game <- readBoard chess
     print game
-    let (x, y) = head . fst $ decide game chess testParameter
+    let (x, y) = decide game chess testParameter
     print $ show (x, y)
     writeFile "action.txt" $ show (succ serial) ++ " /drop " ++ show x ++ " " ++ show y
 

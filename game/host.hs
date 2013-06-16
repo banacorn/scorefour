@@ -2,24 +2,38 @@ module Game.Host where
 
 import Game.Type
 import Game.Player 
+import Game.Stat 
 
 
 -- instance of Game
 emptyGame = Game $ replicate 64 Empty
+dryRound = oneRound (testParameter, testParameter) emptyGame
+dryRounds n = manyRound (testParameter, testParameter) n emptyGame
 
+testParameterPair = (testParameter, testParameter)
 
+run :: Chess -> Parameter -> Game -> Game
+run chess parameter game = dropChess chess decision game
+    where   decision = decide game chess parameter
 
---oneRound :: (Parameter, Parameter) -> Game -> Game
---oneRound (a, b) = 
+oneRound :: (Parameter, Parameter) -> Game -> Game
+oneRound (a, b) = run B b . run A a 
 
---runRounds _ 0 = id
---runRounds players n = runRounds players (n - 1) . runRound players 
+manyRound :: (Parameter, Parameter) -> Int -> Game -> Game
+manyRound _ 0 = id
+manyRound parameters n = manyRound parameters (n - 1) . oneRound parameters 
 
---runCompleteGame players = runRounds players 32 emptyGame
---    where   emptyGame = Game $ replicate 64 Empty
+runCompleteGame :: (Parameter, Parameter) -> (Int, Int)
+runCompleteGame parameters = (fitness statA, fitness statB)
+    where   (statA, statB) = stat $ manyRound parameters 32 emptyGame
 
-
-
+fitness :: Stat -> Int
+fitness s = score connections
+    where   connections = scoreFour s
+            score 1 = 5
+            score 2 = 3
+            score 3 = 2
+            score n = 1 + score (pred n)
 
 --f = Game $ replicate 64 A
 --line1 = go A (0, 0) n >>= go A (1, 1) >>= go A (1, 1) >>= go A (2, 2) >>= go A (2, 2) >>= go A (2, 2) >>= go A (3, 3) >>= go A (3, 3) >>= go A (3, 3) >>= go A (3, 3)

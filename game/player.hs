@@ -1,4 +1,4 @@
-module Game.Player (decide, testParameter) where
+module Game.Player (decide, dropChess, testParameter) where
 
 import Game.Type
 import Game.Stat
@@ -53,8 +53,8 @@ expand chess (actions, game) = let tree = availableSlot game in
         [] -> [(actions, game)]
         tree -> map (\ position -> (actions ++ [position], dropChess chess position game)) tree
 
-decide :: Game -> Chess -> Parameter -> ([Position], Double)
-decide game chess parameters = maximumBy (comparing snd) $ map (evaluateAction parameters) tree
+decide :: Game -> Chess -> Parameter -> Position
+decide game chess parameters = head . fst . maximumBy (comparing snd) $ map (evaluateAction parameters) tree
     where   tree = expand chess ([], game) >>= expand chess' >>= expand chess >>= expand chess'
             chess' = if chess == A then B else A
 
