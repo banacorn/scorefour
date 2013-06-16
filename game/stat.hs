@@ -53,10 +53,8 @@ countConnection array = (value `div` 1000000, value `mod` 1000000 `div` 10000, v
 
             count 400 = 1000000
             count 4   = 100
-            count 301 = 10000
             count 300 = 10000
             count 3   = 1
-            count 103 = 1
             count _   = 0
             {-# INLINE count #-}
 
