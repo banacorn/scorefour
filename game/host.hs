@@ -1,6 +1,7 @@
 module Game.Host where
 
 import Game.Type
+import Game.Player
 
 
 ---- instance of Game
