@@ -1,6 +1,7 @@
 module Main where 
 
 import Game.Type
+import Game.Host
 
 import Data.IORef
 import Control.Monad
