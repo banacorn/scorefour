@@ -5,10 +5,12 @@ import Game.Player
 
 
 -- instance of Game
---n = Game $ replicate 64 Empty
+emptyGame = Game $ replicate 64 Empty
 
---runRound :: (Player, Player) -> Game -> Game
---runRound (a, b) = action b . action a
+
+
+--runRound :: (Parameter, Parameter) -> Game -> Game
+--runRound (a, b) = 
 
 --runRounds _ 0 = id
 --runRounds players n = runRounds players (n - 1) . runRound players 

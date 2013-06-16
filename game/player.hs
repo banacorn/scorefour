@@ -1,4 +1,4 @@
-module Game.Player where
+module Game.Player (decide, testParameter) where
 
 import Game.Type
 import Game.Stat
@@ -6,11 +6,8 @@ import Data.List (maximumBy)
 import Data.Ord (comparing)
 
 -- test data
-
 m = n =.= (0, 0) =.= (0, 0) =.= (0, 0) =-= (0, 3)
-
 full = Game $ replicate 63 B ++ [Empty]
-
 testParameter = Parameter {
     scoreFourW = 3,
     openThreeW = 1,
@@ -18,15 +15,6 @@ testParameter = Parameter {
     surfaceW = 0,
     ratioW = -1
 }
-
---playerA = Player A parameter
---playerB = Player B parameter
-
-
---twice = map (evaluatePair . flip expand B) $ expand n A
---    where   evaluatePair (a, b) = evaluate a + (evaluate b) * -1
-
---getRatio (Player _ parameters) = ratioW parameters
 
 evaluate :: Parameter -> Stat -> Double
 evaluate parameters stat = 
@@ -64,9 +52,10 @@ expand chess (actions, game) = let tree = availableSlot game in
         [] -> [(actions, game)]
         tree -> map (\ position -> (actions ++ [position], dropChess chess position game)) tree
 
-choose :: Game -> Parameter -> ([Position], Double)
-choose game parameters = maximumBy (comparing snd) $ map (evaluateAction parameters) tree
-    where   tree = expand A ([], game) >>= expand B >>= expand A >>= expand B
+decide :: Game -> Chess -> Parameter -> ([Position], Double)
+decide game chess parameters = maximumBy (comparing snd) $ map (evaluateAction parameters) tree
+    where   tree = expand chess ([], game) >>= expand chess' >>= expand chess >>= expand chess'
+            chess' = if chess == A then B else A
 
 indexToPosition :: Int -> Position
 indexToPosition n = (mod n 4, div n 4)

@@ -1,7 +1,6 @@
 module Game.Stat (stat) where
 
 import Game.Type
-import Data.List (foldl')
 import Data.Array.Unboxed
 
 stat :: Game -> (Stat, Stat)
