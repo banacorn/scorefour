@@ -4,7 +4,6 @@ import Game.Type
 import Game.Player 
 import Game.Stat 
 
-
 -- instance of Game
 emptyGame = Game $ replicate 64 Empty
 dryRound = oneRound (testParameter, testParameter) emptyGame
@@ -24,15 +23,19 @@ manyRound _ 0 = id
 manyRound parameters n = manyRound parameters (n - 1) . oneRound parameters 
 
 runCompleteGame :: (Parameter, Parameter) -> (Int, Int)
-runCompleteGame parameters = (fitness statA, fitness statB)
+--runCompleteGame parameters = (fitness statA, fitness statB)
+runCompleteGame parameters = (fitness statA + fitness statA', fitness statB + fitness statB')
     where   (statA, statB) = stat $ manyRound parameters 32 emptyGame
+            (statB', statA') = stat $ manyRound (swap parameters) 32 emptyGame
+            swap (a, b) = (b, a)
 
 fitness :: Stat -> Int
 fitness s = score connections
     where   connections = scoreFour s
+            score 0 = 0
             score 1 = 5
-            score 2 = 3
-            score 3 = 2
+            score 2 = 8
+            score 3 = 10
             score n = 1 + score (pred n)
 
 --f = Game $ replicate 64 A

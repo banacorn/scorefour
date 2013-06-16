@@ -55,7 +55,7 @@ expand chess (actions, game) = let tree = availableSlot game in
 
 decide :: Game -> Chess -> Parameter -> Position
 decide game chess parameters = head . fst . maximumBy (comparing snd) $ map (evaluateAction parameters) tree
-    where   tree = expand chess ([], game) >>= expand chess' >>= expand chess >>= expand chess'
+    where   tree = expand chess ([], game) >>= expand chess' -- >>= expand chess >>= expand chess'
             chess' = if chess == A then B else A
 
 indexToPosition :: Int -> Position
