@@ -9,8 +9,8 @@ emptyGame = Game $ replicate 64 Empty
 
 
 
---runRound :: (Parameter, Parameter) -> Game -> Game
---runRound (a, b) = 
+--oneRound :: (Parameter, Parameter) -> Game -> Game
+--oneRound (a, b) = 
 
 --runRounds _ 0 = id
 --runRounds players n = runRounds players (n - 1) . runRound players 

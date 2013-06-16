@@ -7,7 +7,8 @@ import Data.IORef
 
 import Game.Type
 import Game.Player
--- Arg serial playerID
+
+-- Arg serial chess
 data Arg = Arg (Int, Chess) deriving (Eq, Show)
 
 chunk n [] = []
@@ -25,11 +26,10 @@ readBoard chess = do
 
 writeAction :: Int -> Chess -> IO ()
 writeAction serial chess = do
-
     game <- readBoard chess
     print game
     let (x, y) = head . fst $ decide game chess testParameter
-    print  $ show (succ serial) ++ " /drop " ++ show x ++ " " ++ show y
+    print $ show (x, y)
     writeFile "action.txt" $ show (succ serial) ++ " /drop " ++ show x ++ " " ++ show y
 
 parseRequest :: String -> Maybe Int

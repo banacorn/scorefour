@@ -35,6 +35,7 @@ replace [] n a = []
 replace (x:xs) 0 a = a:xs
 replace (x:xs) n a = x:replace xs (pred n) a
 
+dropChess :: Chess -> Position -> Game -> Game
 dropChess chess position (Game slots) = Game $ dropChess' slots chess position
     where   dropChess' [] chess (x, y) = []
             dropChess' slots chess (x, y)
