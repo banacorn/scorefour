@@ -16,6 +16,9 @@ data Stat = Stat {
     surface :: Int
 } deriving (Eq)
 
+n = Game $ replicate 64 Empty
+
+
 -- instaces
 instance Show Chess where
     show Empty = " "

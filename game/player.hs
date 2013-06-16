@@ -1,8 +1,8 @@
 module Game.Player where
 
 import Game.Type
+import Game.Stat
 
-n = Game $ replicate 64 Empty
 m = n =.= (0, 0)  =.= (0, 0)  =.= (0, 0)  =.= (0, 0) 
 
 
@@ -27,6 +27,8 @@ game =-= position = dropChess B position game
 
 expand :: Game -> Chess -> [Game]
 expand game chess = map (\ position -> dropChess chess position game ) (availableSlot game)
+
+twice = map (flip expand B) $ expand n A
 
 
 
