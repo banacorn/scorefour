@@ -1,4 +1,4 @@
-module Game.Host where
+module Game.Host (runCompleteGame) where
 
 import Game.Type
 import Game.Player 
@@ -8,8 +8,6 @@ import Game.Stat
 emptyGame = Game $ replicate 64 Empty
 dryRound = oneRound (testParameter, testParameter) emptyGame
 dryRounds n = manyRound (testParameter, testParameter) n emptyGame
-
-testParameterPair = (testParameter, testParameter)
 
 run :: Chess -> Parameter -> Game -> Game
 run chess parameter game = dropChess chess decision game

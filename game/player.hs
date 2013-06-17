@@ -23,11 +23,12 @@ evaluate parameters stat =
     fromIntegral (cornerAndCore   stat) * cornerAndCoreW   parameters +
     fromIntegral (surface         stat) * surfaceW         parameters
 
-evaluateAction :: Parameter -> Action -> ([Position], Double)
-evaluateAction parameters (positions, game) = (positions, fitness)
-    where   fitness = evaluate parameters statA + (evaluate parameters statB) * ratio 
-            (statA, statB) = stat game
+evaluateAction :: Parameter -> Chess -> Action -> ([Position], Double)
+evaluateAction parameters chess (positions, game) = (positions, fitness)
+    where   fitness = evaluate parameters statSelf - (evaluate parameters statComponent) * (1 + ratio / 100)
+            (statSelf, statComponent) = if chess == A then stat game else swap $ stat game
             ratio = ratioW parameters
+            swap (a, b) = (b, a)
 
 
 replace :: [a] -> Int -> a -> [a]
@@ -54,7 +55,7 @@ expand chess (actions, game) = let tree = availableSlot game in
         tree -> map (\ position -> (actions ++ [position], dropChess chess position game)) tree
 
 decide :: Game -> Chess -> Parameter -> Position
-decide game chess parameters = head . fst . maximumBy (comparing snd) $ map (evaluateAction parameters) tree
+decide game chess parameters = head . fst . maximumBy (comparing snd) $ map (evaluateAction parameters chess) tree
     where   tree = expand chess ([], game) >>= expand chess' -- >>= expand chess >>= expand chess'
             chess' = if chess == A then B else A
 
